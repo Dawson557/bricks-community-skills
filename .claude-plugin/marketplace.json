@@ -1,0 +1,30 @@
+{
+  "name": "bricks-community-skills",
+  "owner": {
+    "name": "Grasshopper Web Agency",
+    "url": "https://grasshopperweb.agency"
+  },
+  "metadata": {
+    "description": "Agent skills for the Bricks Community plugin suite.",
+    "version": "0.1.0"
+  },
+  "plugins": [
+    {
+      "name": "bricks-community",
+      "description": "Skills for building Bricks templates on sites running the Bricks Community plugins: courses, modules and lessons, drip, content locking, events, groups and notifications.",
+      "source": "./",
+      "strict": false,
+      "skills": [
+        "./skills/bce-start-here",
+        "./skills/bce-frontend-build",
+        "./skills/bce-course-templates",
+        "./skills/bce-course-structure",
+        "./skills/bce-content-locking",
+        "./skills/bce-event-templates",
+        "./skills/bce-group-surfaces",
+        "./skills/bce-notifications",
+        "./skills/bce-skills-update"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,110 @@
+#!/usr/bin/env sh
+# Maintainers: publish the committed HEAD as GitHub Release v<VERSION>, with
+# one zip per skill (for claude.ai uploads) plus a whole-package zip.
+#
+# Usage: scripts/release [--dry-run]
+#
+# Uses your existing `gh` login. Never writes a token anywhere.
+
+set -eu
+
+REPO_SLUG="Dawson557/bricks-community-skills"
+ROOT="$(cd "$(dirname "$0")/.." && pwd)"
+
+DRY_RUN=false
+if [ "${1:-}" = "--dry-run" ]; then
+	DRY_RUN=true
+	shift
+fi
+if [ "$#" -gt 0 ]; then
+	echo "usage: scripts/release [--dry-run]" >&2
+	exit 2
+fi
+
+say() { printf '%s\n' "$*"; }
+stop() { printf 'release: %s\n' "$*" >&2; exit 1; }
+
+# In a dry run a failed precondition is reported and the run continues, so
+# the whole plan can be read in one go.
+refuse() {
+	if [ "$DRY_RUN" = true ]; then
+		say "WOULD REFUSE: $*"
+	else
+		stop "$*"
+	fi
+}
+
+run() {
+	if [ "$DRY_RUN" = true ]; then
+		say "+ $*"
+	else
+		"$@"
+	fi
+}
+
+cd "$ROOT"
+
+VERSION="$(tr -d '[:space:]' < VERSION)"
+TAG="v$VERSION"
+
+node scripts/validate-package.mjs || stop "the package does not validate"
+
+if [ -n "$(git status --porcelain)" ]; then
+	refuse "uncommitted changes; commit them first"
+fi
+
+if [ "$(git symbolic-ref -q --short HEAD || true)" != "main" ]; then
+	refuse "not on main"
+fi
+
+if git rev-parse -q --verify "refs/tags/$TAG" >/dev/null; then
+	refuse "tag $TAG already exists; bump VERSION"
+fi
+
+NOTES="$(awk -v v="$VERSION" '
+	$0 ~ "^## " v "([^0-9A-Za-z.-]|$)" { on = 1; next }
+	on && /^## / { exit }
+	on { print }
+' CHANGELOG.md)"
+if [ -z "$(printf '%s' "$NOTES" | tr -d '[:space:]')" ]; then
+	refuse "CHANGELOG.md has no '## $VERSION' section; rename '## Unreleased' to it"
+fi
+
+# Git on Windows does not record the executable bit by itself.
+for script in bce-skills-upgrade bce-skills-update-check semver-compare release; do
+	if [ "$(git ls-files -s "scripts/$script" | cut -c1-6)" != "100755" ]; then
+		refuse "scripts/$script is not executable in git; run: git update-index --chmod=+x scripts/$script && git commit"
+	fi
+done
+
+run git tag -a "$TAG" -m "Bricks Community Skills $TAG"
+run git push origin main "$TAG"
+
+DIST="${TMPDIR:-/tmp}/bce-skills-$TAG"
+run rm -rf "$DIST"
+run mkdir -p "$DIST"
+
+ASSETS=""
+for dir in skills/bce-*; do
+	name="$(basename "$dir")"
+	run git archive --format=zip --prefix="$name/" -o "$DIST/$name.zip" "$TAG:skills/$name"
+	ASSETS="$ASSETS $DIST/$name.zip"
+done
+run git archive --format=zip --prefix="bricks-community-skills/" -o "$DIST/bricks-community-skills-$TAG.zip" "$TAG"
+ASSETS="$ASSETS $DIST/bricks-community-skills-$TAG.zip"
+
+NOTES_FILE="$DIST/notes.md"
+if [ "$DRY_RUN" = true ]; then
+	say "+ write release notes to $NOTES_FILE:"
+	printf '%s\n' "$NOTES" | sed 's/^/    /'
+else
+	printf '%s\n' "$NOTES" > "$NOTES_FILE"
+fi
+# shellcheck disable=SC2086 # ASSETS is a space-separated list of paths without spaces.
+run gh release create "$TAG" --repo "$REPO_SLUG" --verify-tag --title "Bricks Community Skills $TAG" --notes-file "$NOTES_FILE" $ASSETS
+
+if [ "$DRY_RUN" = true ]; then
+	say "Dry run: nothing was tagged, pushed or released."
+else
+	say "Published $TAG: https://github.com/$REPO_SLUG/releases/tag/$TAG"
+fi

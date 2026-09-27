@@ -1,0 +1,23 @@
+name: Validate
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  package:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Validate package contract
+        run: node scripts/validate-package.mjs
+      - name: Check script syntax
+        run: |
+          find . -path ./.git -prune -o -type f -name '*.mjs' -exec node --check {} \;
+          sh -n scripts/bce-skills-upgrade scripts/bce-skills-update-check scripts/semver-compare scripts/release
