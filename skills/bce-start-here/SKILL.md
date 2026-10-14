@@ -3,7 +3,7 @@ name: bce-start-here
 description: "Use when doing any Bricks work on a WordPress site running the Bricks Community plugins: courses, lessons, modules, curriculum, events, RSVPs, groups, members, member dashboards, community, paywalls, members-only or restricted content, drip or locked lessons, notifications. Load before the first write. Routes to the matching bce- skill, states the one rule (content lives in posts; templates decide how it looks), and carries the full build guide."
 ---
 
-<!-- Generated from Bricks Community 0.12.1 includes/AI/start-here.md by bin/sync-start-here. Edit that file, not this one. -->
+<!-- Generated from Bricks Community 0.14.2 includes/AI/start-here.md by bin/sync-start-here. Edit that file, not this one. -->
 
 # Building with the Bricks Community suite
 
@@ -192,9 +192,13 @@ Look for these groups in the tag picker. Bind to them instead of writing anythin
 
 **Content drip:** `{drip_is_available}` `{drip_unlocks_at}` `{drip_unlocks_in}` `{drip_lock_reason}` `{course_enrolled_at}` `{course_available_lesson_ids}`
 
-**Events:** `{event_start}` `{event_end}` `{event_format}` `{event_location_url}` `{event_virtual_url}` `{event_capacity}` `{event_ticket_url}` `{event_attendee_count}` `{event_spots_remaining}` `{event_is_full}` `{event_waitlist_count}` `{event_user_status}` `{event_user_is_confirmed}` `{event_user_is_waitlisted}` `{event_user_waitlist_position}`
+**Events:** `{event_start}` `{event_end}` `{event_format}` `{event_location_url}` `{event_virtual_url}` `{event_capacity}` `{event_ticket_url}` `{event_attendee_count}` `{event_spots_remaining}` `{event_is_full}` `{event_waitlist_count}` `{event_user_status}` `{event_user_is_confirmed}` `{event_user_is_waitlisted}` `{event_user_waitlist_position}` `{event_user_can_rsvp}`
+
+**Event Collections** (`bce_event_collection`, a festival or conference): every `{event_*}` tag above also works on a collection. Its events ("sessions") are ordinary events whose parent is the collection: `{event_is_collection}` `{event_collection_id}` `{event_collection_title}` `{event_collection_url}` `{event_requires_collection}` `{event_collection_user_status}` `{event_session_count}` `{event_host_ids}`. List a collection's sessions with a native Posts query, Child of `{post_id}` (or `{event_collection_id}` on a session); collections plus standalone events with post types Event + Event Collection, Child of `0`. For an agenda by day, an **Event Collection Days** loop with `{collection_day_date}`, and inside it a Posts query (Child of `{post_id}`) with two DATETIME meta clauses on `_bce_events_start`: `>=` `{collection_day_from}` and `<=` `{collection_day_to}` — never one BETWEEN clause. An **Event Hosts** loop yields WordPress users, so use `{wp_user_*}` tags inside it.
 
 Inside an **Event Attendees** or **Event Waitlist** loop: `{attendee_name}` `{attendee_avatar}` `{attendee_status}` `{attendee_position}` `{attendee_date}` `{attendee_is_guest}` `{attendee_source}` `{attendee_user_id}`. `{attendee_source}` reads "RSVP" or "Ticket purchase" — everything is "RSVP" until paid ticketing ships. `{attendee_email}` and `{attendee_user_id}` both exist — do not put either on a public template.
+
+**Paid Access** (Bricks Community Commerce): `{bce_access_expires}` `{bce_access_expires_days}` `{bce_access_is_subscription}` describe the viewer's paid access to one group: a group ID argument (`{bce_access_expires:12}`) or the enclosing Groups loop. Empty for lifetime access. Condition `bce_paid_access_ends_within`, value `7` or `7:12`, for a renew banner. A paywall is the Restricted Content template with a link to the pricing page; there is no buy-link tag.
 
 **Content Locking:** `{bce_accessible_<post_type>_ids}`, one per tracked post type. Selectable in a Query Loop's **Include** field, which is how you build a "my courses" listing.
 

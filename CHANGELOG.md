@@ -2,9 +2,10 @@
 
 One short line per change. This package is versioned separately from the plugins.
 
-## Unreleased
+## 0.1.1
 
 * Install and update now run entirely with git, so an agent can do either from a pasted prompt without hitting a blocked download.
+* `bce-start-here` updated to match the latest Bricks Community build guide.
 
 ## 0.1.0
 
