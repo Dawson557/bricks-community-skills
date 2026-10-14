@@ -13,31 +13,38 @@ The skills are released at https://github.com/Dawson557/bricks-community-skills,
 1. Find the install:
 
 ```bash
-_BCE_CHECK=""
-for _CAND in "$HOME/.bricks/skills/bricks-community-skills/scripts/bce-skills-update-check" "$PWD/scripts/bce-skills-update-check" "$HOME/.claude/skills/bricks-community-skills/scripts/bce-skills-update-check" "$HOME/.codex/skills/bricks-community-skills/scripts/bce-skills-update-check"; do
-  [ -f "$_CAND" ] && _BCE_CHECK="$_CAND" && break
-done
-echo "$_BCE_CHECK"
+BCE_DIR="$HOME/.bricks/skills/bricks-community-skills"
+[ -d "$BCE_DIR/.git" ] && echo found || echo missing
 ```
 
-   No path found: the install is managed by the client. In Claude Code, tell the user to run `/plugin marketplace update bricks-community-skills`. On claude.ai, download the new zips from the latest release and re-upload them. Stop.
+   `missing`: the install is managed by the client. In Claude Code, tell the user to type `/plugin marketplace update bricks-community-skills`, then `/reload-plugins`. On claude.ai, download the new zips from the latest release and re-upload them. Stop.
 
-2. Check: `sh "$_BCE_CHECK" --force || true`
-   - `BCE_SKILLS_UPDATE_CHECK_FAILED`: GitHub unreachable. Keep the current version; don't call it up to date.
-   - No output: already current.
+2. Check:
 
-3. Upgrade: `sh "$(dirname "$_BCE_CHECK")/bce-skills-upgrade" "<tag>"` (omit the tag if none was reported).
+```bash
+git -C "$BCE_DIR" fetch -q --tags origin
+OLD="$(git -C "$BCE_DIR" describe --tags 2>/dev/null)"
+NEW="$(git -C "$BCE_DIR" describe --tags --abbrev=0 origin/main)"
+echo "$OLD -> $NEW"
+```
 
-| Output | Do |
-|---|---|
-| `BCE_SKILLS_UPDATED <old> <new> <tag>` | Summarise `CHANGELOG.md` between the versions in 3–5 bullets |
-| `BCE_SKILLS_ALREADY_CURRENT` / `BCE_SKILLS_PINNED` | Done |
-| `BCE_SKILLS_NOT_GIT_INSTALL` | Client-managed install: see step 1 |
-| `BCE_SKILLS_NO_RELEASE_FOUND` / `BCE_SKILLS_RELEASE_CHECK_FAILED` | Keep the current version |
-| `BCE_SKILLS_DOWNGRADE_REFUSED` | Stop. Never pass `--allow-downgrade` unless the user asks for that older version |
-| `BCE_SKILLS_LOCAL_CHANGES_STASHED` | Tell the user: `git stash pop` in the skills folder restores them |
-| `BCE_SKILLS_STASH_FAILED` / `BCE_SKILLS_WORKTREE_NOT_CLEAN` | Stop and show the git error |
+   - `fetch` failed: GitHub unreachable. Keep the current version; don't call it up to date.
+   - `OLD` equals `NEW`: already current. Done.
 
-4. Claude Code with a local marketplace: `/plugin marketplace update bricks-community-skills`, then `/reload-plugins`. Other clients: start a new chat.
+3. Upgrade: `git -C "$BCE_DIR" checkout -q "$NEW"`. If git refuses because of local changes, stop and show the error; never discard them.
+
+4. Link any new skills and refresh copied ones (`$HOME/.claude/skills` for Claude Code, `$HOME/.agents/skills` for Codex and others):
+
+```bash
+SKILLS_DIR="$HOME/.claude/skills"
+export MSYS=winsymlinks:native
+for skill in "$BCE_DIR"/skills/bce-*; do
+  target="$SKILLS_DIR/$(basename "$skill")"
+  if [ -L "$target" ] || [ ! -e "$target" ]; then ln -sfn "$skill" "$target"; fi
+  [ -L "$target" ] || cp -R "$skill/." "$target/"
+done
+```
+
+5. Summarise `CHANGELOG.md` between the two versions in 3–5 bullets, and tell the user to start a new chat.
 
 Skills older than the site's plugin still work, but where they disagree with the site's `bce/start-here` ability, the ability wins.

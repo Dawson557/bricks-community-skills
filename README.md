@@ -16,7 +16,31 @@ The easiest route: in wp-admin go to **Bricks Community → Settings → AI**, c
 
 ## Install
 
-### Claude Code, quick install
+### Claude Code, Codex and other agents with a shell
+
+Your agent can run this for you. It clones the repo and links the skill folders, which are plain Markdown, into your client's skills directory. Nothing from the repo is executed:
+
+```bash
+BCE_DIR="$HOME/.bricks/skills/bricks-community-skills"
+[ -d "$BCE_DIR/.git" ] || git clone -q https://github.com/Dawson557/bricks-community-skills.git "$BCE_DIR"
+git -C "$BCE_DIR" fetch -q --tags origin
+git -C "$BCE_DIR" checkout -q "$(git -C "$BCE_DIR" describe --tags --abbrev=0 origin/main)"
+
+SKILLS_DIR="$HOME/.claude/skills"   # Claude Code. Codex and others: "$HOME/.agents/skills"
+mkdir -p "$SKILLS_DIR"
+export MSYS=winsymlinks:native   # Git Bash on Windows: real symlinks where allowed
+for skill in "$BCE_DIR"/skills/bce-*; do
+  target="$SKILLS_DIR/$(basename "$skill")"
+  if [ -L "$target" ] || [ ! -e "$target" ]; then ln -sfn "$skill" "$target"; fi
+  [ -L "$target" ] || cp -R "$skill/." "$target/"
+done
+```
+
+The checkout is pinned to the latest release tag, not `main`. Running the same block again upgrades. The symlinks mean an upgrade reaches every skill without copying. Where Windows doesn't allow symlinks, `ln` copies the folders instead, and each run of the block refreshes the copies. Start a new chat afterwards.
+
+### Claude Code, typed by you
+
+If you'd rather manage it as a Claude Code plugin, type these yourself (an agent can't run slash commands):
 
 ```txt
 /plugin marketplace add Dawson557/bricks-community-skills
@@ -24,35 +48,6 @@ The easiest route: in wp-admin go to **Bricks Community → Settings → AI**, c
 ```
 
 Update with `/plugin marketplace update bricks-community-skills`.
-
-### Claude Code, release-managed install
-
-```bash
-git clone https://github.com/Dawson557/bricks-community-skills.git ~/.bricks/skills/bricks-community-skills
-~/.bricks/skills/bricks-community-skills/scripts/bce-skills-upgrade
-```
-
-```txt
-/plugin marketplace add ~/.bricks/skills/bricks-community-skills
-/plugin install bricks-community@bricks-community-skills
-```
-
-The upgrade script pins the checkout to the latest GitHub Release. Run it again, or ask the agent to load `bce-skills-update`, to upgrade.
-
-### Codex and other skill-compatible agents
-
-```bash
-git clone https://github.com/Dawson557/bricks-community-skills.git ~/.bricks/skills/bricks-community-skills
-~/.bricks/skills/bricks-community-skills/scripts/bce-skills-upgrade
-
-SKILLS_DIR="$HOME/.agents/skills"   # Codex only: "$HOME/.codex/skills"
-mkdir -p "$SKILLS_DIR"
-for skill in "$HOME"/.bricks/skills/bricks-community-skills/skills/bce-*; do
-  ln -sfn "$skill" "$SKILLS_DIR/$(basename "$skill")"
-done
-```
-
-The symlinks mean a later upgrade updates every skill without copying again. Start a new task afterwards.
 
 ### Cursor
 
