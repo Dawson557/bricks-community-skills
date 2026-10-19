@@ -23,6 +23,7 @@
         "./skills/bce-event-templates",
         "./skills/bce-group-surfaces",
         "./skills/bce-notifications",
+        "./skills/bce-member-profile",
         "./skills/bce-skills-update"
       ]
     }

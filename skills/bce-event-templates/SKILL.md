@@ -35,7 +35,13 @@ An **events list** is a Posts loop over post type Event. Meta keys for ordering 
 
 Query types **Event Attendees** and **Event Waitlist** (Event ID empty = current event). Keep the waitlist on queue order, ascending.
 
-Tags inside: `{attendee_name}` `{attendee_avatar}` `{attendee_status}` `{attendee_position}` `{attendee_date}` `{attendee_is_guest}`.
+Tags inside: `{attendee_name}` `{attendee_avatar}` `{attendee_status}` `{attendee_position}` `{attendee_date}` `{attendee_is_guest}` `{attendee_attendance}` (`attended` / `no_show` / empty; organizer-only pages).
+
+## Tickets and check-in
+
+- `{event_user_checkin_qr}` is the viewer's ticket as an inline SVG QR code (`{event_user_checkin_qr:300}` for the size, default 200) in a Basic Text or Rich Text element; `{event_user_checkin_url}` is the link it encodes. Both are empty unless the viewer is confirmed. `{event_user_attendance}` is `attended` / `no_show` / empty, for a "thanks for coming" block.
+- **Ticket tags go only on the attendee's own view** (account page, "my tickets", the event page they're viewing). **Never put them inside an attendee or waitlist loop**: a ticket is a bearer secret for its holder alone.
+- Staff check people in from wp-admin (the door view and its scanner); don't build a front-end check-in page.
 
 **These loops aren't restricted.** Never put `{attendee_email}` or `{attendee_user_id}` on a public template. Gate the whole list with `bce_has_access` or a login condition when names shouldn't be public.
 

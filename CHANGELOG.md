@@ -2,6 +2,11 @@
 
 One short line per change. This package is versioned separately from the plugins.
 
+## Unreleased
+
+* New `bce-member-profile` skill: front-end profile and account pages that keep working when members are blocked from wp-admin and the REST API.
+* `bce-content-locking` mentions Block wp-admin and points profile pages to `bce-member-profile`.
+
 ## 0.1.1
 
 * Install and update now run entirely with git, so an agent can do either from a pasted prompt without hitting a blocked download.

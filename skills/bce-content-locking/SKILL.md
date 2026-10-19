@@ -52,6 +52,7 @@ A template type that renders automatically on locked posts, only for visitors wi
 Groups & Access → **Access Settings** (settings `content_locking.private_site`, `public_post_ids`, `redirect_without_access`, `no_access_destination`).
 - **Private Site** sends logged-out visitors to Bricks' own login page (Bricks → Settings → General → Custom authentication pages). While it's on, **logged-out REST calls return 401**, so check it before debugging an empty logged-out loop. The login form must have **no Redirect action**, or the return trip is lost.
 - **No-access page**: it receives `?bce_post=<id>` (a lesson's course). Query Loop **Include** `{bce_no_access_post_id}` to show that post's title and a join button. Empty unless the post is locked for the viewer.
+- **Block wp-admin** (`block_admin`, with `block_admin_api` and an allow list) keeps non-admins out of wp-admin and stops their writes through core's REST API. Profile and account pages must not depend on either: load `bce-member-profile`.
 
 ## Verify
 
