@@ -2,8 +2,9 @@
 
 One short line per change. This package is versioned separately from the plugins.
 
-## Unreleased
+## 0.2.0
 
+* `bce-notifications`: preferences pages use the new Notification preferences element; the removed form action is gone from the guidance. Covers notification categories, the Send action's Category setting and the `{bce_notification_category}` tag (Bricks Community Extension 0.18.0).
 * New `bce-member-profile` skill: front-end profile and account pages that keep working when members are blocked from wp-admin and the REST API.
 * `bce-content-locking` mentions Block wp-admin and points profile pages to `bce-member-profile`.
 

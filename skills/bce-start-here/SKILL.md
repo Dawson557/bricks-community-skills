@@ -3,7 +3,7 @@ name: bce-start-here
 description: "Use when doing any Bricks work on a WordPress site running the Bricks Community plugins: courses, lessons, modules, curriculum, events, RSVPs, groups, members, member dashboards, community, paywalls, members-only or restricted content, drip or locked lessons, notifications. Load before the first write. Routes to the matching bce- skill, states the one rule (content lives in posts; templates decide how it looks), and carries the full build guide."
 ---
 
-<!-- Generated from Bricks Community 0.16.1 includes/AI/start-here.md by bin/sync-start-here. Edit that file, not this one. -->
+<!-- Generated from Bricks Community 0.18.0 includes/AI/start-here.md by bin/sync-start-here. Edit that file, not this one. -->
 
 # Building with the Bricks Community suite
 
@@ -209,7 +209,7 @@ Inside an **Event Attendees** or **Event Waitlist** loop: `{attendee_name}` `{at
 
 **Group Content:** `{bce_owner_group_id}` `{bce_owner_group_name}` for the current post; `{bce_group_post_ids:12}` (or `{bce_group_post_ids}` in a Groups loop) in a Posts loop's **Include** field lists a group's posts.
 
-**Notifications:** `{bce_unread_notification_count}` works anywhere. The rest only resolve inside a **My Notifications** query loop: `{bce_notification_title}` `{bce_notification_message}` `{bce_notification_url}` `{bce_notification_date}` `{bce_notification_type}` `{bce_notification_is_unread}` `{bce_notification_object_id}` `{bce_notification_id}`.
+**Notifications:** `{bce_unread_notification_count}` works anywhere. The rest only resolve inside a **My Notifications** query loop: `{bce_notification_title}` `{bce_notification_message}` `{bce_notification_url}` `{bce_notification_date}` `{bce_notification_type}` `{bce_notification_category}` `{bce_notification_is_unread}` `{bce_notification_object_id}` `{bce_notification_id}`.
 
 ---
 
@@ -251,6 +251,8 @@ Four things worth knowing before you conclude something is broken:
 * **Sample rows appear in the builder** when the person editing has no notifications, so there is something to style. They are not on the live site and they do not link anywhere.
 
 The unread dot is the one thing the element draws itself, and it has its own controls (background, size, radius, offset, optional count). Everything else is yours.
+
+**Notification preferences are an element too:** **Notification preferences** (`bce-notification-preferences`). Members switch each notification category, and each of their groups, on or off in the site and by email; the grid depends on the member, so a Bricks Form cannot express it. The old "Save notification preferences" form action is removed — never build a preferences form. Put the element on a page and set that page as the **Preferences page** under Notifications → Settings → Email.
 
 ---
 

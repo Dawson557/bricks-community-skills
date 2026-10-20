@@ -1,6 +1,6 @@
 ---
 name: bce-notifications
-description: "Use when adding a notification bell, notification inbox or dropdown, unread count or badge, a notification list or activity feed, a 'send a notification to my group' form, or an email or notification preferences page on a site running Bricks Community Notifications. Covers the Notifications element (use it; don't assemble a bell), the My Notifications loop and tags, and the Send notification and Save notification preferences form actions."
+description: "Use when adding a notification bell, notification inbox or dropdown, unread count or badge, a notification list or activity feed, a 'send a notification to my group' form, or an email or notification preferences page on a site running Bricks Community Notifications. Covers the Notifications element (use it; don't assemble a bell), the Notification preferences element (use it; don't build a preferences form), the My Notifications loop and tags, notification categories, and the Send notification form action."
 ---
 
 # Bricks Community: notifications
@@ -22,15 +22,26 @@ In the builder, sample rows appear and read/unread markers both show: conditions
 
 ## Lists elsewhere
 
-Query type **My Notifications (Bricks Community)**. Always the viewer's own; there's no setting to show anyone else's.
+Query type **My Notifications (Bricks Community)**. Always the viewer's own; there's no setting to show anyone else's. It already leaves out what the viewer has muted.
 
-Tags inside: `{bce_notification_title}` `{bce_notification_message}` `{bce_notification_url}` `{bce_notification_date}` `{bce_notification_type}` `{bce_notification_is_unread}`. Anywhere: `{bce_unread_notification_count}`.
+Tags inside: `{bce_notification_title}` `{bce_notification_message}` `{bce_notification_url}` `{bce_notification_date}` `{bce_notification_type}` `{bce_notification_category}` `{bce_notification_is_unread}`. Anywhere: `{bce_unread_notification_count}`.
 
 **Clicking a row outside the element doesn't mark it read.** Put the element on the page too (e.g. in the header).
 
+## Preferences page: an element, not a form
+
+Insert **Notification preferences** (`bce-notification-preferences`, in the Bricks Community element category). It renders the viewer's grid: an email master switch, then each notification **category** and each of their groups, with an *In the site* and a *By email* checkbox, and a Save button. Only ever saves the viewer's own.
+
+- **Never build a preferences form.** The "Save notification preferences" form action was removed; the grid depends on the member and can't be a fixed Form.
+- Change wording under its **Text** controls; style from the Style tab. Builder shows sample rows.
+- Set its page as the **Preferences page** under Notifications → Settings → Email. Emails link to it, beside a one-click "Stop emails about *category*" link that works without it.
+
+## Categories
+
+Every notification has a category (Announcements, New content, Groups, Account, Other; New events and My events with Events; Purchases & access with Commerce; plus any the owner adds on Notifications → **Categories**). Members switch categories off per channel. Read them with `bce/list-notification-categories`; add or change custom ones with `bce/manage-notification-categories`.
+
 ## Forms
 
-- **Send notification**: group admins sending to their own groups. Off until the owner ticks *Allow group admins to send notifications*. Group ID usually a hidden `{bce_group_id}`; fill **Restrict to group ID(s)** when it comes from a field. Groups only, never a person.
-- **Save notification preferences**: one master checkbox plus `group_id:{{field}}` pairs. Only ever saves the submitter's own. Then set its page as the **Preferences page** under Notifications → Settings → Email, or emails go out without an unsubscribe link.
+- **Send notification**: group admins sending to their own groups. Off until the owner ticks *Allow group admins to send notifications*. Group ID usually a hidden `{bce_group_id}`; fill **Restrict to group ID(s)** when it comes from a field. Groups only, never a person. **Category** is optional: a category key the owner made pickable (see `bce/list-notification-categories`, `selectable`), fixed or `{{field_id}}`; anything else becomes Announcements.
 
 Docs: https://grasshopperweb.agency/lessons/notifications-the-notifications-element/

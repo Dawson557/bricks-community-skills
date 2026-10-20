@@ -31,6 +31,7 @@ export const BRICKS_SKILLS = [
 // Backticked `bce-*` / `bricks-*` identifiers that are not skills.
 const NOT_SKILLS = new Set([
 	'bce-notifications-panel', // a removed Bricks element, named so agents stop looking for it
+	'bce-notification-preferences', // a Bricks element, not a skill
 	'bce-skills-upgrade', 'bce-skills-update-check', // scripts in this package
 	'bricks-community-skills', 'bricks-skills', // repository and marketplace names
 	'bricks-ai', 'bricks-settings-page',
