@@ -38,7 +38,7 @@ Insert **Notification preferences** (`bce-notification-preferences`, in the Bric
 
 ## Categories
 
-Every notification has a category (Announcements, New content, Groups, Account, Other; New events and My events with Events; Purchases & access with Commerce; plus any the owner adds on Notifications → **Categories**). Members switch categories off per channel. Read them with `bce/list-notification-categories`; add or change custom ones with `bce/manage-notification-categories`.
+Every notification has a category (Admin, Announcements, New content, Groups, Account, Other; New events and My events with Events; Purchases & access with Commerce; plus any the owner adds on Notifications → **Categories**). Members switch categories off per channel, except **Admin**: locked, always on in the bell and by email, no unsubscribe link, never selectable by senders. Plugins put must-see types there with `'category' => 'admin'`; never suggest it for a manual or form send. Read them with `bce/list-notification-categories`; add or change custom ones with `bce/manage-notification-categories`.
 
 ## Forms
 
