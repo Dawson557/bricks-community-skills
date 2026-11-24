@@ -36,7 +36,7 @@ A template type that renders automatically on locked posts, only for visitors wi
    - **Never empty**: a template with no conditions renders nowhere.
    - Entire website matches 404s too: a panel shown to admins on a "locked" page usually means a wrong URL.
 4. Bind it: "*{post_title}* is for members". Branch login vs upgrade with Bricks' `user_logged_in` condition first, then tiers with `bce_in_group`. On events use `{event_start}` and `{event_spots_remaining}`.
-5. Per-type offers: branch inside one template with a `dynamic_data` condition on `{post_type}` (`course`, `lesson`, `event`). Bricks has no post-type element condition.
+5. Per-type offers: branch inside one template with a `dynamic_data` condition on `{post_type}` (`bce_course`, `bce_lesson`, `bce_event`). Bricks has no post-type element condition.
 
 **Never put the locked content in this template.** It renders to exactly the people you're locking out. Always give one clear next step (pricing page, signup, a join-group form).
 

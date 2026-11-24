@@ -2,6 +2,15 @@
 
 One short line per change. This package is versioned separately from the plugins.
 
+## 0.3.0
+
+* Events: add-to-calendar tags (`.ics` download and Google Calendar link).
+* Events: recurring events (series tags and recipes), cancelled events and `{event_location_text}`.
+* Events: pass holders RSVP to festival sessions that sell their own tickets.
+* `bce-event-templates` covers paid tickets (Event Tickets and My Tickets loops, ticket tags), collections and hosts.
+* Post-type slugs in `bce-content-locking` and `bce-start-here` are the real ones (`bce_course`, `bce_lesson`, `bce_event`).
+* `bce-start-here` updated to match the latest Bricks Community build guide.
+
 ## 0.2.0
 
 * `bce-notifications`: preferences pages use the new Notification preferences element; the removed form action is gone from the guidance. Covers notification categories (including the locked Admin category), the Send action's Category setting and the `{bce_notification_category}` tag (Bricks Community Extension 0.18.0).
