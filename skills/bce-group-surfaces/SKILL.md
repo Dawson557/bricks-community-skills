@@ -41,4 +41,8 @@ Create / Update / Delete group, **Manage group member** (invite, remove, make ad
 - Update actions leave empty settings unchanged.
 - Group post types must be enabled under Groups & Access → Group Content first. New posts are Pending by default.
 
+## Members' certificates
+
+With the Certificates module on and the site setting allowing it, a group admin's dashboard can list, export, revoke, reissue and issue their members' certificates: the **Group certificates** loop and the certificate Form actions. Load `bce-certificates`.
+
 Docs: https://grasshopperweb.agency/lessons/groups-group-admin-dashboard/ · https://grasshopperweb.agency/lessons/group-content-group-post-forms/

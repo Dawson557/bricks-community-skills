@@ -26,7 +26,9 @@ Query type **My Notifications (Bricks Community)**. Always the viewer's own; the
 
 Tags inside: `{bce_notification_title}` `{bce_notification_message}` `{bce_notification_url}` `{bce_notification_date}` `{bce_notification_type}` `{bce_notification_category}` `{bce_notification_is_unread}`. Anywhere: `{bce_unread_notification_count}`.
 
-**Clicking a row outside the element doesn't mark it read.** Put the element on the page too (e.g. in the header).
+**Clicking a row outside the element doesn't mark it read.** For a "mark as read" button, use the interaction action **Mark notifications as read** (`action: bceMarkNotificationsRead`, `bceNotificationsScope: all | nolink`, any trigger, no target). It marks the unread rows shown on the page only. Never build this with a JavaScript action or a form. Bricks' own interaction ability rejects actions it doesn't know, this one included: if no other write path accepts it, build the button and ask the user to add the interaction in the builder.
+
+The bell marks notifications without a link read when it opens (element setting **Notifications without a link**). Don't add an interaction for that.
 
 ## Preferences page: an element, not a form
 

@@ -6,12 +6,12 @@
   },
   "metadata": {
     "description": "Agent skills for the Bricks Community plugin suite.",
-    "version": "0.3.0"
+    "version": "0.4.0"
   },
   "plugins": [
     {
       "name": "bricks-community",
-      "description": "Skills for building Bricks templates on sites running the Bricks Community plugins: courses, modules and lessons, drip, content locking, events, groups and notifications.",
+      "description": "Skills for building Bricks templates on sites running the Bricks Community plugins: courses, modules and lessons, drip, content locking, events, groups, notifications, comments and certificates.",
       "source": "./",
       "strict": false,
       "skills": [
@@ -23,6 +23,8 @@
         "./skills/bce-event-templates",
         "./skills/bce-group-surfaces",
         "./skills/bce-notifications",
+        "./skills/bce-certificates",
+        "./skills/bce-comments",
         "./skills/bce-member-profile",
         "./skills/bce-skills-update"
       ]

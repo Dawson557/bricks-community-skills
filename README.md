@@ -75,6 +75,8 @@ Ask your client, in a new chat: *"Without calling any site abilities, list the l
 | **bce-event-templates** | Event pages, RSVP forms and attendee loops. |
 | **bce-group-surfaces** | Group pages, member dashboards, group admin forms and group-owned posts. |
 | **bce-notifications** | The notification bell, notification loops and preferences. |
+| **bce-certificates** | My-certificates pages, the Certificate Name form, the verification page and group admins' certificate tools. |
+| **bce-comments** | Comment threads, replies and reactions, built with the Comments element. |
 | **bce-member-profile** | Front-end profile and account pages that keep working when members are blocked from wp-admin and the REST API. |
 | **bce-skills-update** | Updating this package. |
 

@@ -2,6 +2,14 @@
 
 One short line per change. This package is versioned separately from the plugins.
 
+## 0.4.0
+
+* `bce-notifications`: the "Mark notifications as read" interaction action, and the bell marking link-less notifications read on open.
+* New `bce-certificates` skill: certificate pages, the Certificate Name form, the verification template, group admins' certificate tools and the certificate abilities.
+* `bce-group-surfaces` and `bce-member-profile` point to `bce-certificates`; `bce-start-here` routes to it.
+* New `bce-comments` skill: the Comments element, reaction display modes, comment loops, tags, conditions and the Post comment form action.
+* `bce-start-here` routes comment threads to `bce-comments`.
+
 ## 0.3.0
 
 * Events: add-to-calendar tags (`.ics` download and Google Calendar link).

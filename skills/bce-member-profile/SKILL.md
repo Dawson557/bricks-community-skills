@@ -31,6 +31,8 @@ All of these submit through `admin-ajax.php`, `admin-post.php` or the page itsel
   - Values are in `$form->get_fields()['form-field-<field id>']`; uploads in `$form->get_uploaded_files()['form-field-<field id>']` (each a `wp_handle_upload()` result: `file`, `url`, `type`). Report with `$form->set_result( [ 'type' => 'error', 'message' => … ] )`.
 - **Profile photo.** Use the **Profile Photos** module (`avatars`, BCE 0.16.0+; off by default, turned on under Settings > Feature Modules): a File field plus the **Update profile photo (Bricks Community)** form action (*Photo field ID*, optional *Person* user ID, *Remove photo*, *Saved/Removed message*), shown with `{bce_avatar_url}` / `{bce_has_avatar}` and gated with `{bce_can_edit_avatar}`. It works for members without `upload_files`, crops to a square, and replaces Gravatar in `get_avatar()` everywhere. Leave the File field's Storage at the default. Another user's photo needs `edit_user` or a `bce_avatar_may_edit` filter grant. Without the module: create the attachment server-side in a custom handler (`wp_insert_attachment()`), store its ID in user meta, and filter `pre_get_avatar_data`, or `get_avatar()` ignores it.
 
+- **Certificate Name and certificate fields** (Certificates module): use the **Save certificate details (Bricks Community)** form action, not a custom handler. It writes the member's own `bce_certificate_name` and fields and issues certificates waiting for them. Prefill the name with `{certificate_name}`. See `bce-certificates`.
+
 ## Never
 
 - Link "Edit profile" to `wp-admin/profile.php` or `get_edit_profile_url()`. It bounces members to the home page.

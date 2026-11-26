@@ -1,13 +1,13 @@
 ---
 name: bce-start-here
-description: "Use when doing any Bricks work on a WordPress site running the Bricks Community plugins: courses, lessons, modules, curriculum, events, RSVPs, groups, members, member dashboards, community, paywalls, members-only or restricted content, drip or locked lessons, notifications. Load before the first write. Routes to the matching bce- skill, states the one rule (content lives in posts; templates decide how it looks), and carries the full build guide."
+description: "Use when doing any Bricks work on a WordPress site running the Bricks Community plugins: courses, lessons, modules, curriculum, events, RSVPs, groups, members, member dashboards, community, paywalls, members-only or restricted content, drip or locked lessons, notifications, comments and reactions, certificates. Load before the first write. Routes to the matching bce- skill, states the one rule (content lives in posts; templates decide how it looks), and carries the full build guide."
 ---
 
-<!-- Generated from Bricks Community 0.20.0 includes/AI/start-here.md by bin/sync-start-here. Edit that file, not this one. -->
+<!-- Generated from Bricks Community 1.1.0 includes/AI/start-here.md by bin/sync-start-here. Edit that file, not this one. -->
 
 # Building with the Bricks Community suite
 
-You are connected to a WordPress site running the Bricks theme and the Bricks Community plugin family (Groups, Content Locking, Notifications, Courses, Events). You reach it over MCP. You cannot see the site's files, so everything here is what you need to know before you start writing.
+You are connected to a WordPress site running the Bricks theme and the Bricks Community plugin family (Groups, Content Locking, Notifications, Comments, Certificates, Courses, Events). You reach it over MCP. You cannot see the site's files, so everything here is what you need to know before you start writing.
 
 This is about **courses, modules, lessons and events specifically**. General Bricks technique lives in the Bricks skills — see the first section.
 
@@ -41,7 +41,9 @@ Once they are loaded, use them. Load the task-specific one before you write:
 | Event pages and RSVP | `bce-event-templates` |
 | Group pages and member dashboards | `bce-group-surfaces` |
 | The notification bell, inbox or preferences | `bce-notifications` |
+| A comment thread, replies, or reactions on comments | `bce-comments` |
 | Edit-profile, account or avatar pages | `bce-member-profile` |
+| Certificates: a "my certificates" page, the Certificate Name form, the verification page, group admins' certificate tools | `bce-certificates` |
 | Binding anything to real data | `bricks-dynamic-data` |
 | Deciding where a template applies | `bricks-templates-conditions` |
 | Repeating lessons, modules, events | `bricks-query-loops` |
@@ -213,7 +215,11 @@ Inside an **Event Attendees** or **Event Waitlist** loop: `{attendee_name}` `{at
 
 **Group Content:** `{bce_owner_group_id}` `{bce_owner_group_name}` for the current post; `{bce_group_post_ids:12}` (or `{bce_group_post_ids}` in a Groups loop) in a Posts loop's **Include** field lists a group's posts.
 
+**Certificates** (the Certificates module): `{certificate_title}` `{certificate_full_name}` `{certificate_status}` (`:key` for `valid` / `pending` / `revoked`) `{certificate_number}` `{certificate_code}` `{certificate_hours}` `{certificate_completed_date}` `{certificate_issued_date}` `{certificate_completed_datetime}` `{certificate_issued_datetime}` `{certificate_timezone}` `{certificate_issuer}` `{certificate_missing}` `{certificate_download_url}` `{certificate_verify_url}` `{certificate_pdf_url}` `{certificate_revoked_reason}` describe the certificate in context: a **My Certificates** or **Group certificates** loop row, the verification page's certificate, or the viewer's own for the course, event or collection being viewed or looped. `{certificate_name}` (the viewer's Certificate Name, to prefill the form) and `{certificate_details_url}` work anywhere. There is no holder email tag, deliberately. Conditions: `bce_certificate_status` (none / pending / valid / revoked), `bce_has_certificate_name`, `bce_can_manage_group_certificates`.
+
 **Notifications:** `{bce_unread_notification_count}` works anywhere. The rest only resolve inside a **My Notifications** query loop: `{bce_notification_title}` `{bce_notification_message}` `{bce_notification_url}` `{bce_notification_date}` `{bce_notification_type}` `{bce_notification_category}` `{bce_notification_is_unread}` `{bce_notification_object_id}` `{bce_notification_id}`.
+
+**Comments** (the Comments module): inside a **Comments** loop item, `{bce_comment_author_name}` `{bce_comment_author_avatar}` `{bce_comment_content}` `{bce_comment_date}` `{bce_comment_date_relative}` `{bce_comment_permalink}` `{bce_comment_parent_author_name}` `{bce_comment_depth}` `{bce_comment_reply_count}` `{bce_comment_reaction_total}` `{bce_comment_my_reaction_name}` `{bce_comment_my_reaction_icon}` `{bce_comment_reactors}`; inside a **Comment reactions** item, `{bce_reaction_name}` `{bce_reaction_icon}` `{bce_reaction_count}` `{bce_reaction_reactors}`; `{bce_comments_count}` inside the Comments element. The "who reacted" tags are empty unless the site's `comments.reactor_visibility` setting allows it, deliberately.
 
 ---
 
@@ -228,6 +234,8 @@ Inside an **Event Attendees** or **Event Waitlist** loop: `{attendee_name}` `{at
 **A course's lessons that are in no module:** a Lesson loop outside the module loop, **Include** `{course_ungrouped_lesson_ids}`, Order By **Post include order**. Hide the section when `{course_ungrouped_lesson_count}` is `0`.
 
 **"My courses":** Query Loop over Course with **Include** set to `{bce_accessible_course_ids}`.
+
+**A member's certificates:** Query type **My Certificates (Bricks Community)**, always the viewer's own. **A group's certificates** for its admins: **Group certificates (Bricks Community)** with Group ID `{bce_group_id}`; its tools are Form actions (Revoke / Reinstate / Reissue / Issue certificate). Load `bce-certificates`.
 
 **A member's notifications:** Query type **My Notifications (Bricks Community)**. Always the current viewer's — there is no setting for showing anybody else's, deliberately.
 
@@ -260,6 +268,19 @@ The unread dot is the one thing the element draws itself, and it has its own con
 
 ---
 
+## 6b. A comment thread is an element too
+
+With the Comments module on, use the **Comments** element (`bce-comments`). Do not assemble a thread from Bricks' Post Comments element plus custom code, and do not build your own comment form: the element is what posts, replies, edits, deletes and reacts without a reload, and its form is Bricks' own Form with the **Post comment (Bricks Community)** action.
+
+* It arrives as a working thread of ordinary child elements. Restyle or delete them; keep their `data-bce-comment-*` attributes, which the script relies on.
+* Replies are one flat **Threaded** loop. Indent the looped item with `margin-inline-start: calc(var(--bce-depth) * 2rem);`, never a loop per level.
+* Reactions show in one of three modes set on the element (All, Primary + picker, Just picker). The reactions themselves are managed by the site owner on **Bricks Community › Comment Settings**; no ability writes them. `bce/comment-settings` reads them.
+* Who may comment, moderation, threading depth and paging come from Settings › Discussion. Don't rebuild them with conditions.
+
+Load `bce-comments` for the loops, tags and conditions.
+
+---
+
 ## 7. Use the suite's abilities for structure, not raw post fields
 
 A generic post-writing ability can usually set `parent` and `menu_order` directly. **Do not use it for course structure.** Those writes skip the cache flush and the actions that keep course shape and progress records consistent — harmless across separate requests, wrong within one, which is exactly the case you hit when you make several calls in a row.
@@ -277,6 +298,9 @@ A generic post-writing ability can usually set `parent` and `menu_order` directl
 | A group's members and roles | `bce/list-group-members`, `bce/set-group-member-role` |
 | Which group owns a post | `bce/set-post-owner-group`, `bce/group-content-settings` |
 | How an event is doing, and who signed up (read only) | `bce/get-event-attendance` / `bce/list-event-attendees` |
+| Switch a course's or event's certificate on, set its hours | `bce/get-certificate-settings` / `bce/set-certificate-settings` |
+| List, issue, revoke, reinstate or correct certificates | `bce/list-certificates`, `bce/issue-certificate`, `bce/revoke-certificate`, `bce/reinstate-certificate`, `bce/reissue-certificate` |
+| How comments and reactions are set up | `bce/comment-settings` (change its settings with `bce/update-settings`, `comments.*`) |
 | Any suite setting | `bce/get-settings` / `bce/update-settings` |
 
 Always read before you write. `get-course-structure` returns current positions; `get-drip-rules` returns the rule types this site accepts, so you never have to guess a field name.
